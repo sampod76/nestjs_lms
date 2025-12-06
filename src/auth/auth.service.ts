@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { RegisterDto } from './dto/registerUser.dto';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,9 +12,18 @@ export class AuthService {
   ) {}
   async registerUser(registerUserDto: RegisterDto) {
     const result = await this.userService.createUser(registerUserDto);
-    const payload = { userId: result._id };
+    const payload = { userId: result._id, role: result.roll };
     const token = await this.jwtService.signAsync(payload);
-    return { access_token: token };
+    return { access_token: token, role: result.roll };
+  }
+  async login(loginDto: LoginDto) {
+    const result = await this.userService.findByEmail(loginDto.email);
+    if (!result) {
+      throw new NotFoundException('User not found');
+    }
+    const payload = { userId: result._id, role: result.roll };
+    const token = await this.jwtService.signAsync(payload);
+    return { access_token: token, role: result.roll };
   }
   async profile(userId: string) {
     const result = await this.userService.user(userId);

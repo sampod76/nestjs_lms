@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 // import { JwtModule } from '@nestjs/jwt';
 // import { jwtConstants } from './auth/constants';
+import { CourseModule } from './course/course.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,7 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '6960s' },
+      signOptions: { expiresIn: '356d' },
     }),
 
     MongooseModule.forRoot(
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
 
     AuthModule,
     UserModule,
+    CourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

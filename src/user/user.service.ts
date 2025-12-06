@@ -27,6 +27,10 @@ export class UserService {
     const result = await this.userModel.findById(id).exec();
     return result;
   }
+  findByEmail(email: string) {
+    const result = this.userModel.findOne({ email }).exec();
+    return result;
+  }
   async updateUser(id: string, registerUserDto: RegisterDto) {
     const result = await this.userModel
       .findByIdAndUpdate(id, registerUserDto, { new: true })
